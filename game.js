@@ -1,6 +1,7 @@
 const boardContainer = document.querySelectorAll('board');
 
 const GameBoard = (function() {
+    let player = 'X';
     const board = ['','','','','','','','',''];
 
     const play_board = document.querySelector('.board');
@@ -18,6 +19,12 @@ const GameBoard = (function() {
         alert("Game Restarted!")
     }
     return {restartGame}
+
+    function handleClick(event) {
+        const clickedCellNumber = event.getAttribute('data-btn')
+        console.log(clickedCellNumber);
+    }
+    return { handleClick }
 })();
 
 const Player = (name, symbol) => {
@@ -28,4 +35,5 @@ const Player = (name, symbol) => {
     return { hasTurn, getName, getSymbol };
 };
 
+document.querySelectorAll('.cell').forEach(button => button.addEventListener('click', GameBoard.handleClick));
 document.getElementById('restart').addEventListener('click', GameBoard.restartGame);
