@@ -49,6 +49,19 @@ function handleClicked(e) {
 
 const gameBoard = (function(){
     let board = ['','','','','','','','',''];
+    let currentPlayer = 'X';
+    const winningCombos = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6]
+    ];
+
+    console.log(winningCombos[1])
 
     let _restart = function(){
         alert('I restarted')
@@ -59,9 +72,19 @@ const gameBoard = (function(){
     //return {restart: _restart}
 
     let _handleClicky = function(e){
-        let square = e.target.id;
-        console.log(square)
+        let square = e.target;
+        let squareIndex = square.getAttribute('data-btn');
+
+        handleSquarePlayed(square, squareIndex);
+        console.log(squareIndex)
     }
+
+    let handleSquarePlayed = function(square, squareIndex){
+        board[squareIndex] = currentPlayer;
+        square.innerHTML = currentPlayer;
+        console.log(board)
+    }
+
     document.querySelectorAll('.cell').forEach(cell => {
         cell.addEventListener('click', _handleClicky, { once: true})
     })
