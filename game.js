@@ -1,55 +1,9 @@
 const boardContainer = document.querySelectorAll('board');
-
-/* const GameBoard = (function() {
-    let player = 'X';
-    const board = ['','','','','','','','',''];
-
-    const play_board = document.querySelector('.board');
-    const cells = Array.from(document.querySelectorAll('.cell'));
-    const render_board = () => {
-        board.forEach((i) => {
-            play_board[1].innerHTML = board[1];
-        })
-    }
-
-    return { render_board, board, play_board }
-
-    function restartGame() {
-        //board = ['','','','','','','','',''];
-        alert("Game Restarted!")
-    }
-    return { restartGame }
-    let _restart = function(){
-        alert('Boom Boom')
-    }
-
-    return { restart: _restart}
-
-    function handleClick(event) {
-        const clickedCellNumber = event.getAttribute('data-btn')
-        console.log(clickedCellNumber);
-    }
-    return {handleClick} 
-    
-
-})(); */
-
-//document.getElementById('cell_0').addEventListener('click', GameBoard.handleClick);
-
-//This works, but need to get this into the module
-/* document.querySelectorAll('.cell').forEach(cell => {
-    cell.addEventListener('click', handleClicked, { once: true})
-})
-
-function handleClicked(e) {
-    console.log('Clicked!')
-} */
-
-//document.getElementById('restart').addEventListener('click', GameBoard.restartGame);
-
 const gameBoard = (function(){
     let board = ['','','','','','','','',''];
     let currentPlayer = 'X';
+    let gameActive = true;
+    const display = document.querySelector('.game-status');
     const winningCombos = [
         [0,1,2],
         [3,4,5],
@@ -61,11 +15,12 @@ const gameBoard = (function(){
         [2,4,6]
     ];
 
-    console.log(winningCombos[1])
-
     let _restart = function(){
         alert('I restarted')
         board = ['','','','','','','','',''];
+        currentPlayer = 'X';
+        gameActive = true;
+        document.querySelectorAll('.cell').forEach(cell => cell.innerHTML = '');
     }
     document.getElementById('restart').addEventListener('click', _restart)
 
@@ -74,20 +29,57 @@ const gameBoard = (function(){
     let _handleClicky = function(e){
         let square = e.target;
         let squareIndex = square.getAttribute('data-btn');
-
+        if (board[squareIndex] != '' || !gameActive){
+            return;
+        }
         handleSquarePlayed(square, squareIndex);
-        console.log(squareIndex)
+        checkWinner();
+        //console.log(squareIndex)
     }
 
     let handleSquarePlayed = function(square, squareIndex){
         board[squareIndex] = currentPlayer;
         square.innerHTML = currentPlayer;
-        console.log(board)
+        //console.log(board)
     }
 
     document.querySelectorAll('.cell').forEach(cell => {
-        cell.addEventListener('click', _handleClicky, { once: true})
+        cell.addEventListener('click', _handleClicky) //removed , { once: true}
     })
+
+    let checkWinner = function(){
+        let roundWon = false;
+        for (let i = 0; i <= 7; i++){
+            const winCondition = winningCombos[i];
+            let a = board[winCondition[0]];
+            let b = board[winCondition[1]];
+            let c = board[winCondition[2]];
+            if (a === '' || b === '' || c === ''){
+                continue;
+            }
+            if (a === b && b === c){
+                roundWon = true;
+                break
+            }
+        }
+        if (roundWon){
+            display.innerHTML = `Player ${currentPlayer} won!`;
+            gameActive = false;
+            return;
+        }
+        let draw = !board.includes('');
+        if (draw){
+            display.innerHTML = `It's a draw!`;
+            gameActive = false;
+            return;
+        }
+        playerTurn();
+    }
+
+    let playerTurn = function(){
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        display.innerHTML = `It's ${currentPlayer}'s turn`
+    }
 })();
 
 //gameBoard.restart();
