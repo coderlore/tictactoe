@@ -15,8 +15,7 @@ h1 {
     flex-direction: column;
     min-height: 100vh;
     align-items: center;
-    /*justify-content: center;*/
-    background: #eee;
+    background: rgb(230, 216, 199);
 }
 
 .board {
@@ -49,6 +48,7 @@ button {
     font-size: 1rem;
     font-weight: bold;
     background: none;
+    background-color: white;
     transition: all 0.2s ease-in-out;
     border-radius: 5px;
     margin: 20px;
